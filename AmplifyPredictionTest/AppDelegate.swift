@@ -8,13 +8,40 @@
 
 import UIKit
 
+import Amplify
+import AWSMobileClient
+import AmplifyPlugins
+import AWSPredictionsPlugin
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-
+//    var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        
+        AWSMobileClient.default().initialize { (userState, error) in
+            guard error == nil else {
+                print("Error initializing AWSMobileClient. Error: \(error!.localizedDescription)")
+                return
+            }
+            guard let userState = userState else {
+                print("userState is unexpectedly empty initializing AWSMobileClient")
+                return
+            }
+
+            print("AWSMobileClient initialized, userstate: \(userState)")
+        }
+
+        let predictionsPlugin = AWSPredictionsPlugin()
+        try! Amplify.add(plugin: predictionsPlugin)
+        try! Amplify.configure()
+        print("Amplify initialized")
+
+//        window = UIWindow()
+//        window?.rootViewController  = MainTabBarController()
+        
         return true
     }
 
